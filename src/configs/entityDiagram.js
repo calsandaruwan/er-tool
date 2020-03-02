@@ -1,0 +1,1 @@
+export const DRAG_TYPE_TABLE = 'DRAG_TYPE_TABLE';

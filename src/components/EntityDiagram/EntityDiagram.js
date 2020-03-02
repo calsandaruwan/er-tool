@@ -14,7 +14,7 @@ class EntityDiagram extends Component {
                     width: '70%',
                     height: '550px',
                     border: 'solid 1px black',
-                    position:'absolute',
+                    position: 'absolute',
                     left: '0px',
                 },
                 sidePanel: {
@@ -22,7 +22,7 @@ class EntityDiagram extends Component {
                     width: '29%',
                     height: '550px',
                     border: 'solid 1px black',
-                    position:'absolute',
+                    position: 'absolute',
                     right: '0px',
                 }
             }
@@ -31,14 +31,15 @@ class EntityDiagram extends Component {
 
     render() {
         return (
-            <div id={this.props.editorId}>
-                <div id={'edTitle'}>
-                    <h3>{this.props.title}</h3>
+            <div id={this.props.editorId} className="row">
+                <div className="col-lg-9">
+                    <div ref={ref => this.ref = ref} style={{height: '550px'}} className="card">
+                        <div className="card-body">
+                            <Canvas/>
+                        </div>
+                    </div>
                 </div>
-                <div id={'edCanvas'} style={this.state.tempStyles.canvas}>
-                    <Canvas/>
-                </div>
-                <div id={'edSidePanel'} style={this.state.tempStyles.sidePanel}>
+                <div className="col-lg-3">
                     <SidePanel getSelectedTables={this.getSelectedTables}/>
                 </div>
             </div>
@@ -48,10 +49,9 @@ class EntityDiagram extends Component {
     // get a list of tables that are already selected
     getSelectedTables = () => {
         if (this.props.diagram
-            && this.props.diagram.meta
-            && this.props.diagram.meta.tables
-            && this.props.diagram.meta.tables.length) {
-            return this.props.diagram.meta.tables;
+            && this.props.diagram.tables
+            && this.props.diagram.tables.length) {
+            return this.props.diagram.tables;
         }
         return [];
     }

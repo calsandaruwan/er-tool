@@ -6,20 +6,22 @@ import {
     setActiveDrag,
     updateActiveDrag,
 } from "../../../actions/entityDiagramActions";
+import {DRAG_TYPE_TABLE} from "../../../configs/entityDiagram";
 
 class SidePanel extends Component {
     constructor() {
         super();
         this.state = {
             tempStyles: {
-                tableRow: {
-                    width: '100%',
-                    border: 'solid 1px black',
-                    paddingBottom: '5px',
-                    marginBottom: '3px',
+                sidePanel: {
+                    height: '550px'
                 },
-                rowParent: {
-                    width:'100%'
+                row: {
+                    boxShadow: '0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2)',
+                    cursor: 'move',
+                    borderRadius: '.25rem',
+                    padding: '10px',
+                    marginBottom: '5px'
                 }
             }
         }
@@ -27,8 +29,15 @@ class SidePanel extends Component {
 
     render() {
         return (
-            <div style={this.state.tempStyles.rowParent}>
-                {this.renderTablesList()}
+            <div style={this.state.tempStyles.sidePanel} className="card">
+                <div className="card-header">
+                    <h4 className="card-title">List of tables</h4>
+                </div>
+                <div className="card-body">
+                    <div className="row">
+                        {this.renderTablesList()}
+                    </div>
+                </div>
             </div>
         )
     }
@@ -41,9 +50,12 @@ class SidePanel extends Component {
                 <div draggable
                      onDragStart={(e) => this.onDragStart(e, table)}
                      onDragEnd={this.onDragEnd}
-                     style={this.state.tempStyles.tableRow}
+                     className="col-md-12"
                      key={index}>
-                    {table.name}
+                    <div style={{minHeight: '15px', cursor: 'move',}} className="info-box">
+                        <i className="far fa-table"></i>
+                        <span className="info-box-text">{table.name}</span>
+                    </div>
                 </div>
             )
         })
@@ -79,8 +91,9 @@ class SidePanel extends Component {
         };
 
         const params = {
-            type: 'table',
+            type: DRAG_TYPE_TABLE,
             signature: table.name,
+            data: table,
             coordinates,
             pointerOffset,
             dragging: true,
@@ -98,7 +111,8 @@ class SidePanel extends Component {
 
 const mapStateToProps = state => {
     return ({
-        tables: state.entityDiagram.tables
+        tables: state.entityDiagram.tables,
+        activeDiagram: state.entityDiagram.activeDiagram,
     });
 };
 

@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from "redux";
+import TableNotation from './TableNotaion';
+import {appendToActiveDiagramTable} from "../../../actions/entityDiagramActions";
 
 class Canvas extends Component {
     constructor() {
@@ -42,7 +44,16 @@ class Canvas extends Component {
             x: e.pageX - coordinates.left - lastActiveDrag.pointerOffset.x,
             y: e.pageY - coordinates.top - lastActiveDrag.pointerOffset.y,
         };
-        this.setState({tableCoordinates});
+
+        const params = {
+            coordinates: {
+                x: tableCoordinates.x,
+                y: tableCoordinates.y,
+            },
+            ...lastActiveDrag.data
+        };
+
+        this.props.appendToActiveDiagramTable(params);
     };
 
     onDragOver = (e) => {
@@ -50,28 +61,34 @@ class Canvas extends Component {
     };
 
     renderTableNotations = () => {
-        let tblNotation = Object.assign({}, this.state.tempStyles.tblNotation);
-        tblNotation.left = this.state.tableCoordinates.x;
-        tblNotation.top = this.state.tableCoordinates.y;
+        const {activeDiagram} = this.props;
+        if (!(activeDiagram && activeDiagram.tables && activeDiagram.tables.length)) {
+            return null;
+        }
+
 
         return (
-            <div style={tblNotation}>
-                hey there
+            <div id="diagram-wrapper">
+                {activeDiagram.tables.map((table, index) => {
+                    return <TableNotation table={table}
+                                          index={index}
+                                          key={index}/>
+                })}
             </div>
         )
-    }
+    };
 }
 
 const mapStateToProps = state => {
     return ({
         lastActiveDrag: state.entityDiagram.lastActiveDrag,
+        activeDiagram: state.entityDiagram.activeDiagram,
     });
 };
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        //action1,
-        //action2,
+        appendToActiveDiagramTable
     }, dispatch);
 }
 

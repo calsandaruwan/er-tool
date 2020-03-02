@@ -7,13 +7,16 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 import * as serviceWorker from './serviceWorker';
 import rootReducer from './reducers/index'
 import EntityDiagram from "./components/EntityDiagram/EntityDiagram";
+import DefaultLayout from "./components/Layout/DefaultLayout";
 
 // setup store
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 
 ReactDOM.render(
     <Provider store={store}>
-        <EntityDiagram />
+        <DefaultLayout>
+            <EntityDiagram />
+        </DefaultLayout>
     </Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
