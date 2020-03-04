@@ -6,7 +6,7 @@ import {
     setActiveDrag,
     updateActiveDrag,
 } from "../../../actions/entityDiagramActions";
-import {DRAG_TYPE_TABLE} from "../../../configs/entityDiagram";
+import {DRAG_TYPE_TABLE_CREATE, _onDragStart, _onDragEnd} from "../../../helpers/entityDiagram";
 
 class SidePanel extends Component {
     constructor() {
@@ -83,29 +83,21 @@ class SidePanel extends Component {
         return [];
     };
 
-    onDragStart = (e, table) => {
-        const coordinates = e.target.getBoundingClientRect();
-        const pointerOffset = {
-            x: (e.pageX - coordinates.left),
-            y: (e.pageY - coordinates.top)
-        };
-
+    onDragStart = (e, data) => {
         const params = {
-            type: DRAG_TYPE_TABLE,
-            signature: table.name,
-            data: table,
-            coordinates,
-            pointerOffset,
-            dragging: true,
+            e,
+            type: DRAG_TYPE_TABLE_CREATE,
+            signature: data.name,
+            data,
+            callback: (p) => this.props.setActiveDrag(p)
         };
-        this.props.setActiveDrag(params)
+        _onDragStart(params);
     };
 
-    onDragEnd = (e) => {
-        const params = {
-            dragging: false,
-        };
-        this.props.updateActiveDrag(params);
+    onDragEnd = () => {
+        _onDragEnd({
+            callback: (p) => this.props.updateActiveDrag(p)
+        });
     }
 }
 
@@ -121,7 +113,6 @@ function mapDispatchToProps(dispatch) {
         setActiveDrag,
         resetActiveDrag,
         updateActiveDrag,
-        //action2,
     }, dispatch);
 }
 

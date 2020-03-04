@@ -1,7 +1,17 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from "redux";
-import {removeToActiveDiagramTable} from "../../../actions/entityDiagramActions";
+import {
+    removeToActiveDiagramTable,
+    setActiveDrag,
+    updateActiveDrag
+} from "../../../actions/entityDiagramActions";
+import {
+    _onDragEnd,
+    _onDragStart,
+    DRAG_TYPE_TABLE_MOVE
+} from "../../../helpers/entityDiagram";
+import TableRowNotation from "./TableRowNotation";
 
 class TableNotation extends Component {
     constructor() {
@@ -12,7 +22,11 @@ class TableNotation extends Component {
     render() {
         const style = this.reComputeStyles();
         return (
-            <div key={this.props.table.name} style={style}
+            <div draggable
+                 onDragStart={(e) => this.onDragStart(e, this.props.table)}
+                 onDragEnd={this.onDragEnd}
+                 key={this.props.table.name}
+                 style={style}
                  className="card">
                 <div className="card-header">
                     <h3 className="card-title">{this.props.table.name}</h3>
@@ -29,13 +43,10 @@ class TableNotation extends Component {
                         {
                             this.props.table.fields.map((column, index) => {
                                 return (
-                                    <li key={index} className="nav-item active">
-                                        <div className="btn btn-block text-left">
-                                            <i className="fas fa-inbox"></i> {column.field}
-                                            <span
-                                                className="badge bg-primary float-right">{index}</span>
-                                        </div>
-                                    </li>
+                                    <TableRowNotation key={index}
+                                                      table={this.props.table}
+                                                      column={column}
+                                                      index={index}/>
                                 )
                             })
                         }
@@ -67,18 +78,37 @@ class TableNotation extends Component {
     onDeleteTableNotation = () => {
         this.props.removeToActiveDiagramTable({name: this.props.table.name});
     };
+
+    onDragStart = (e, data) => {
+        const params = {
+            e,
+            type: DRAG_TYPE_TABLE_MOVE,
+            signature: data.name,
+            data,
+            lastActiveDrag: this.props.lastActiveDrag,
+            callback: (p) => this.props.setActiveDrag(p)
+        };
+        _onDragStart(params);
+    };
+
+    onDragEnd = () => {
+        _onDragEnd({
+            callback: (p) => this.props.updateActiveDrag(p)
+        });
+    }
 }
 
 const mapStateToProps = state => {
     return ({
-        // givenName: state.path.to.reducer.key
+        lastActiveDrag: state.entityDiagram.lastActiveDrag,
     });
 };
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        removeToActiveDiagramTable
-        //action2,
+        removeToActiveDiagramTable,
+        setActiveDrag,
+        updateActiveDrag,
     }, dispatch);
 }
 

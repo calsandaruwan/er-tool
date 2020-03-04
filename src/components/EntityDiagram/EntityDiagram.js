@@ -8,24 +8,6 @@ class EntityDiagram extends Component {
     constructor() {
         super();
         this.state = {
-            tempStyles: {
-                canvas: {
-                    display: 'inline-block',
-                    width: '70%',
-                    height: '550px',
-                    border: 'solid 1px black',
-                    position: 'absolute',
-                    left: '0px',
-                },
-                sidePanel: {
-                    display: 'inline-flex',
-                    width: '29%',
-                    height: '550px',
-                    border: 'solid 1px black',
-                    position: 'absolute',
-                    right: '0px',
-                }
-            }
         }
     }
 
@@ -65,8 +47,6 @@ const mapStateToProps = state => {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        //action1,
-        //action2,
     }, dispatch);
 }
 

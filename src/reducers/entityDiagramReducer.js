@@ -1,8 +1,12 @@
 import {
-    APPEND_TABLE_TO_ACTIVE_DIAGRAM, REMOVE_TABLE_FROM_ACTIVE_DIAGRAM,
+    APPEND_RELATIONSHIP_TO_ACTIVE_DIAGRAM,
+    APPEND_TABLE_TO_ACTIVE_DIAGRAM,
+    REMOVE_RELATIONSHIP_FROM_ACTIVE_DIAGRAM,
+    REMOVE_TABLE_FROM_ACTIVE_DIAGRAM,
     RESET_ACTIVE_DRAG,
     SET_ACTIVE_DRAG,
     UPDATE_ACTIVE_DRAG,
+    UPDATE_TABLE_OF_ACTIVE_DIAGRAM,
 } from "../configs/actionTypes/entityDiagramActionTypes";
 
 const initialState = {
@@ -24,6 +28,7 @@ const initialState = {
     activeDiagram: {
         id: 'diagram 1',
         name: 'sample diagram',
+        relationships: [],
         tables: []
     },
 
@@ -194,12 +199,50 @@ export default function (state = initialState, action) {
                 }
             };
 
+        case UPDATE_TABLE_OF_ACTIVE_DIAGRAM:
+            return {
+                ...state,
+                activeDiagram: {
+                    ...state.activeDiagram,
+                    tables: state.activeDiagram.tables.map(table => {
+                        if(table.name === action.payload.name) {
+                            return action.payload;
+                        }
+                        return table;
+                    })
+                }
+            };
+
         case REMOVE_TABLE_FROM_ACTIVE_DIAGRAM:
             return {
                 ...state,
                 activeDiagram: {
                     ...state.activeDiagram,
                     tables: state.activeDiagram.tables.filter(table => table.name !== action.payload.name)
+                }
+            };
+
+
+
+        case APPEND_RELATIONSHIP_TO_ACTIVE_DIAGRAM:
+            return {
+                ...state,
+                activeDiagram: {
+                    ...state.activeDiagram,
+                    relationships: [
+                        ...state.activeDiagram.relationships,
+                        action.payload
+                    ]
+                }
+            };
+
+
+           case REMOVE_RELATIONSHIP_FROM_ACTIVE_DIAGRAM:
+            return {
+                ...state,
+                activeDiagram: {
+                    ...state.activeDiagram,
+                    relationships: state.activeDiagram.relationships.filter(relationship => relationship.id !== action.payload.id)
                 }
             };
 
