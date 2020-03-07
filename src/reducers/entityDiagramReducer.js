@@ -1,7 +1,8 @@
 import {
     APPEND_RELATIONSHIP_TO_ACTIVE_DIAGRAM,
     APPEND_TABLE_TO_ACTIVE_DIAGRAM,
-    REMOVE_RELATIONSHIP_FROM_ACTIVE_DIAGRAM,
+    REMOVE_RELATIONSHIP_BY_ID,
+    REMOVE_RELATIONSHIP_BY_TABLES,
     REMOVE_TABLE_FROM_ACTIVE_DIAGRAM,
     RESET_ACTIVE_DRAG,
     SET_ACTIVE_DRAG,
@@ -205,7 +206,7 @@ export default function (state = initialState, action) {
                 activeDiagram: {
                     ...state.activeDiagram,
                     tables: state.activeDiagram.tables.map(table => {
-                        if(table.name === action.payload.name) {
+                        if (table.name === action.payload.name) {
                             return action.payload;
                         }
                         return table;
@@ -223,7 +224,6 @@ export default function (state = initialState, action) {
             };
 
 
-
         case APPEND_RELATIONSHIP_TO_ACTIVE_DIAGRAM:
             return {
                 ...state,
@@ -236,13 +236,26 @@ export default function (state = initialState, action) {
                 }
             };
 
-
-           case REMOVE_RELATIONSHIP_FROM_ACTIVE_DIAGRAM:
+        case REMOVE_RELATIONSHIP_BY_ID:
             return {
                 ...state,
                 activeDiagram: {
                     ...state.activeDiagram,
-                    relationships: state.activeDiagram.relationships.filter(relationship => relationship.id !== action.payload.id)
+                    relationships: state.activeDiagram.relationships.filter((relationship) => {
+                        return relationship.id !== action.payload.id
+                    })
+                }
+            };
+
+        case REMOVE_RELATIONSHIP_BY_TABLES:
+            return {
+                ...state,
+                activeDiagram: {
+                    ...state.activeDiagram,
+                    relationships: state.activeDiagram.relationships.filter((relationship) => {
+                        console.log(relationship.id.includes(action.payload.search));
+                        return !relationship.id.includes(action.payload.search)
+                    })
                 }
             };
 

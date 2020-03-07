@@ -2,11 +2,13 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from "redux";
 import {
+    removeRelationshipByTables,
     removeToActiveDiagramTable,
     setActiveDrag,
     updateActiveDrag
 } from "../../../actions/entityDiagramActions";
 import {
+    _generateId,
     _onDragEnd,
     _onDragStart,
     DRAG_TYPE_TABLE_MOVE
@@ -26,6 +28,7 @@ class TableNotation extends Component {
                  onDragStart={(e) => this.onDragStart(e, this.props.table)}
                  onDragEnd={this.onDragEnd}
                  key={this.props.table.name}
+                 id={_generateId([this.props.table.db, this.props.table.name])}
                  style={style}
                  className="card">
                 <div className="card-header">
@@ -76,6 +79,7 @@ class TableNotation extends Component {
     };
 
     onDeleteTableNotation = () => {
+        this.props.removeRelationshipByTables({search: this.props.table.name})
         this.props.removeToActiveDiagramTable({name: this.props.table.name});
     };
 
@@ -109,6 +113,7 @@ function mapDispatchToProps(dispatch) {
         removeToActiveDiagramTable,
         setActiveDrag,
         updateActiveDrag,
+        removeRelationshipByTables,
     }, dispatch);
 }
 

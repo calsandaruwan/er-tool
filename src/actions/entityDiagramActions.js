@@ -1,6 +1,8 @@
 import {
     APPEND_RELATIONSHIP_TO_ACTIVE_DIAGRAM,
     APPEND_TABLE_TO_ACTIVE_DIAGRAM,
+    REMOVE_RELATIONSHIP_BY_ID,
+    REMOVE_RELATIONSHIP_BY_TABLES,
     REMOVE_RELATIONSHIP_FROM_ACTIVE_DIAGRAM,
     REMOVE_TABLE_FROM_ACTIVE_DIAGRAM,
     RESET_ACTIVE_DRAG,
@@ -75,10 +77,22 @@ export const appendToActiveDiagramRelationship = (params) => dispatch => {
     })
 };
 
-// remove a table object from the active diagram object
-export const removeToActiveDiagramRelationship = (params) => dispatch => {
+
+// ----- relationships related ------
+// ----------------------------------
+
+// remove a relationship by id
+export const removeRelationshipById = (params) => dispatch => {
     dispatch({
-        type: REMOVE_RELATIONSHIP_FROM_ACTIVE_DIAGRAM,
+        type: REMOVE_RELATIONSHIP_BY_ID,
+        payload: params
+    })
+};
+
+// remove a relationship by tables
+export const removeRelationshipByTables = (params) => dispatch => {
+    dispatch({
+        type: REMOVE_RELATIONSHIP_BY_TABLES,
         payload: params
     })
 };

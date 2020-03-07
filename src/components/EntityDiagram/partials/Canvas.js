@@ -2,15 +2,15 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from "redux";
 import TableNotation from './TableNotaion';
+import Relationsips from './Relationships'
 import {
     appendToActiveDiagramTable,
     updateActiveDiagramTable
 } from "../../../actions/entityDiagramActions";
 import {
     _getParamsForTableNotations,
-    _getPathByRelationShip,
     DRAG_TYPE_TABLE_CREATE,
-    DRAG_TYPE_TABLE_MOVE
+    DRAG_TYPE_TABLE_MOVE,
 } from "../../../helpers/entityDiagram";
 
 class Canvas extends Component {
@@ -20,7 +20,8 @@ class Canvas extends Component {
             tempStyles: {
                 canvas: {
                     width: '100%',
-                    height: '100%'
+                    height: '100%',
+                    border: 'solid 1px black'
                 }
             },
             tableCoordinates: {
@@ -50,7 +51,7 @@ class Canvas extends Component {
             this.handleTableDropOnCanvas(params);
             return false;
         } else if (lastActiveDrag.type === DRAG_TYPE_TABLE_MOVE) {
-            let corrections = {x:22.5,y:22.5};
+            let corrections = {x: 22.5, y: 22.5};
             let params = _getParamsForTableNotations(e, lastActiveDrag, {corrections});
             this.handleTableMoveOnCanvas(params);
             return false;
@@ -86,18 +87,7 @@ class Canvas extends Component {
                                               key={index}/>
                     })
                 }
-                <svg style={{position:'absolute', width: '100%', height:'100%', zIndex:900}}>
-                    {
-                        activeDiagram.relationships.map((relationship, index) => {
-                            const coordinates = _getPathByRelationShip(relationship);
-                            return <line x1={coordinates[0]}
-                                         y1={coordinates[1]}
-                                         x2={coordinates[2]}
-                                         y2={coordinates[3]}
-                                         style={{stroke:'rgb(0,0,0)',strokeWidth:'1'}} />
-                        })
-                    }
-                </svg>
+                <Relationsips/>
             </div>
         )
     };

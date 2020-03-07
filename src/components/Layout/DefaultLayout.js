@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import HeaderButtons from "./HeaderButtons";
 
 class DefaultLayout extends Component {
     constructor() {
@@ -18,6 +19,9 @@ class DefaultLayout extends Component {
                                     <h3 className="m-0 text-dark">
                                         Er Tool - &nbsp;<small>Version 1.0</small>
                                     </h3>
+                                </div>
+                                <div className="col-sm-6">
+                                    <HeaderButtons/>
                                 </div>
                             </div>
                         </div>

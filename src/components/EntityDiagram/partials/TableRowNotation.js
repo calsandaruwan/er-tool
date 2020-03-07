@@ -35,6 +35,9 @@ class TableRowNotation extends Component {
                 onDragOver={this.onDragOver}>
                 <div className="btn btn-block text-left">
                     {this.props.column.field}
+                    <small className="text-bold text-green">
+                        {this.props.column.key ? ' (' + this.props.column.key + ') ' : null}
+                    </small>
                     <small className="float-right">
                         {this.props.column.type}
                     </small>

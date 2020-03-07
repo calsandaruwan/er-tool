@@ -5,6 +5,8 @@ export const DRAG_TYPE_TABLE_RELATION_CREATE = 'DRAG_TYPE_TABLE_RELATION_CREATE'
 
 export const RELATIONSHIP_ONE_TO_ONE = 'RELATIONSHIP_ONE_TO_ONE';
 
+export const MARGIN = 10;
+
 // entity diagram related helper functions
 
 // start dragging
@@ -18,7 +20,6 @@ export function _onDragStart(dragParams) {
         x: e.clientX - coordinates.left,
         y: e.clientY - coordinates.top
     };
-    // const pointerOffset = _getCoordinatesForTableNotations(e, dragParams.lastActiveDrag);
 
     const params = {
         type: dragParams.type,
@@ -73,24 +74,136 @@ export function _getPathByRelationShip(relationship) {
     if (!(relationship && relationship.from && relationship.to)) {
         return false
     }
-    const canvasCoordinates = document.getElementById('canvas').getBoundingClientRect();
-    const from = document.getElementById(relationship.from.id).getBoundingClientRect();
-    const to = document.getElementById(relationship.to.id).getBoundingClientRect();
+    const canvasCoordinates = _getBoundsById('canvas');
+    const from = _getBoundsById(relationship.from.id);
+    const to = _getBoundsById(relationship.to.id);
+
     return [
         (from.x - canvasCoordinates.left),
-        (from.y - canvasCoordinates.top+ from.height / 2),
-        (to.x  - canvasCoordinates.left + to.width),
+        (from.y - canvasCoordinates.top + from.height / 2),
+        (to.x - canvasCoordinates.left + to.width),
         (to.y - canvasCoordinates.top + to.height / 2)
     ];
 }
 
+
+export function _getEndPointsByRelationship(relationship) {
+    if (!(relationship && relationship.from && relationship.to)) {
+        return false
+    }
+    const canvasCoordinates = _getBoundsById('canvas');
+    const from = _getBoundsById(relationship.from.id);
+    const to = _getBoundsById(relationship.to.id);
+
+    // determine the side
+    let fromX = from.x - 10;
+    let toX = to.x + to.width + 10;
+    if (from.x < to.x) {
+        // FROM is located at the left side of the TO
+        // so line should be started from the right side end of FROM
+        fromX = from.x + from.width + 10;
+        toX = to.x - 10;
+    }
+
+    return {
+        from: {
+            x: Math.floor(fromX - canvasCoordinates.left),
+            y: Math.floor(from.y - canvasCoordinates.top + from.height / 2),
+        }, to: {
+            x: Math.floor(toX - canvasCoordinates.left),
+            y: Math.floor(to.y - canvasCoordinates.top + from.height / 2),
+        }
+    }
+}
+
 export function _getParamsForTableNotations(e, lastActiveDrag, options = {}) {
     const corrections = options.corrections ? options.corrections : {x: 0, y: 0};
-    const canvasCoordinates = document.getElementById('canvas').getBoundingClientRect();
+    const canvasCoordinates = _getBoundsById('canvas');
     const coordinates = {
         x: e.pageX - lastActiveDrag.pointerOffset.x - canvasCoordinates.left + corrections.x,
         y: e.pageY - lastActiveDrag.pointerOffset.y - canvasCoordinates.top + corrections.y,
     };
 
     return {...lastActiveDrag.data, coordinates}
+}
+
+export function _getBoundsById(id) {
+    if (id) {
+        const el = document.getElementById(id);
+        if (el) {
+            return el.getBoundingClientRect();
+        }
+        return null;
+    }
+    return null;
+}
+
+export async function _generateMatrix() {
+    return new Promise((resolve, reject) => {
+        const canvasBounds = _getBoundsById('canvas');
+        let matrix = [];
+        for (let row = 0; row < Math.ceil(canvasBounds.height); row++) {
+            let rowArray = [];
+            for (let col = 0; col < Math.ceil(canvasBounds.width); col++) {
+                rowArray.push(0);
+            }
+            matrix.push(rowArray);
+        }
+        resolve(matrix);
+    });
+
+}
+
+export async function _setNonWalkableAreas(matrix, tables, relationships) {
+    return new Promise((resolve, reject) => {
+        if (tables && tables.length && relationships && relationships.length) {
+            const canvasCoordinates = _getBoundsById('canvas')
+            for (let i = 0; i < tables.length; i++) {
+                const table = tables[i];
+                const tableBounds = _getBoundsById(_generateId([table.db, table.name]));
+
+                let horizontalStart = Math.ceil(tableBounds.x - canvasCoordinates.x - MARGIN);
+                const horizontalEnd = Math.ceil(tableBounds.x + tableBounds.width - canvasCoordinates.x + MARGIN);
+                let verticalStart = Math.ceil(tableBounds.y - canvasCoordinates.y - MARGIN);
+                const verticalEnd = Math.ceil(tableBounds.y + tableBounds.height - canvasCoordinates.y + MARGIN);
+
+
+                // setting upper limit of the table
+                for (horizontalStart; horizontalStart <= horizontalEnd; horizontalStart++) {
+                    // if(matrix.node && matrix.node[verticalStart] && matrix.node[verticalStart][horizontalStart]) {
+                        matrix.setWalkableAt(horizontalStart, verticalStart, false);
+                    // }
+                }
+
+                horizontalStart = Math.ceil(tableBounds.x - canvasCoordinates.x - MARGIN);
+                verticalStart = Math.ceil(tableBounds.y - canvasCoordinates.y - MARGIN);
+
+                // setting lower limit of the table
+                for (horizontalStart; horizontalStart <= horizontalEnd; horizontalStart++) {
+                    // if(matrix.node && matrix.node[verticalStart] && matrix.node[verticalStart][horizontalStart]) {
+                        matrix.setWalkableAt(horizontalStart, verticalEnd, false);
+                    // }
+                }
+
+
+                horizontalStart = Math.ceil(tableBounds.x - canvasCoordinates.x - MARGIN);
+                verticalStart = Math.ceil(tableBounds.y - canvasCoordinates.y - MARGIN);
+
+                // setting left margin of the table
+                for (verticalStart; verticalStart <= verticalEnd; verticalStart++) {
+                    // if(matrix.node && matrix.node[verticalStart] && matrix.node[verticalStart][horizontalStart]) {
+                        matrix.setWalkableAt(horizontalStart, verticalStart, false)
+                    // }
+                }
+
+                verticalStart = Math.ceil(tableBounds.y - canvasCoordinates.y - MARGIN);
+                // setting right margin of the table
+                for (verticalStart; verticalStart <= verticalEnd; verticalStart++) {
+                    matrix.setWalkableAt(horizontalEnd - MARGIN, verticalStart, false)
+                }
+            }
+
+        }
+        resolve(matrix);
+    });
 }
