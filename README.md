@@ -1,68 +1,41 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## ER-TOOL
 
-## Available Scripts
 
-In the project directory, you can run:
+### `Requirements`
+* node  v10.19.0
 
-### `npm start`
+### `Installation`
+* npm install
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### `Build command`
+* npm start - Runs the app in the development mode
+build can be accessed through [localhost:300](http://localhost:3000/)
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### `Why React`
+* Experience with react library
+* React suited for single page applications and the scope of the project is small
+* React-related packages and support
+* Community support is greater than most of the other FE libraries
 
-### `npm test`
+### `Areas to be improved`
+* Need to show the path direction arrow (this direction is calculated and can be seen in the right panel relation list) 
+* Path calculation must be improved (Adding horizontal or vertical lines instead of diagonal lines)
+* Drag actual element when moving tables (currently the element position is changed after dropping it)
+* UI (tables notations are bigger, should have more area for er diagram)
+* Overall performance should be improved while reducing unwanted rendering and loops
+* Relationship cardinality should be updated according to the user input
+* Better if it's possible to alter properties through side panel by selection elements (paths or tables).
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### `Bugs`
+* Tables should be dropped in side the canvas, which is marked with the border. If not it will throw an error
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+### `Tech`
+* This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+* Drag and drop operations are coded on top of default drag drop events (No packages are used)
+* Path calculation - After creating a relationship, two major points are calculated (start and end). 
+The shortest path is calculated while ignoring existing tables locations, between start end end points. For the shortest path 'A-Start' path finding algorithm is used.
+For this a tow dimensional mapping is used. It holds all non walkable pixels of the canvas
+* Minimum number of Third party tools are being used (storage - redux, path detection - pathfinding, image capturing - html-to-image)
+* The object that contains details about the diagram can be seen (in the consle) after clicking 'SAVE' btn.
+* Go through the 'entityDiagramReducer' to get an idea about object structure and default data sets. You can mock data in this reducer (adding more tables or etc)
+* Currently one to one relationship is generated as the default
