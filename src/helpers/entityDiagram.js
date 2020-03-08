@@ -157,10 +157,13 @@ export async function _generateMatrix() {
 export async function _setNonWalkableAreas(matrix, tables, relationships) {
     return new Promise((resolve, reject) => {
         if (tables && tables.length && relationships && relationships.length) {
-            const canvasCoordinates = _getBoundsById('canvas')
+            const canvasCoordinates = _getBoundsById('canvas');
             for (let i = 0; i < tables.length; i++) {
                 const table = tables[i];
                 const tableBounds = _getBoundsById(_generateId([table.db, table.name]));
+
+                const maxX = matrix.width - 1;
+                const maxY = matrix.height - 1;
 
                 let horizontalStart = Math.ceil(tableBounds.x - canvasCoordinates.x - MARGIN);
                 const horizontalEnd = Math.ceil(tableBounds.x + tableBounds.width - canvasCoordinates.x + MARGIN);
@@ -170,9 +173,9 @@ export async function _setNonWalkableAreas(matrix, tables, relationships) {
 
                 // setting upper limit of the table
                 for (horizontalStart; horizontalStart <= horizontalEnd; horizontalStart++) {
-                    // if(matrix.node && matrix.node[verticalStart] && matrix.node[verticalStart][horizontalStart]) {
+                    if ((verticalStart <= maxY && verticalStart >= 0) && horizontalStart <= maxX && horizontalStart >= 0) {
                         matrix.setWalkableAt(horizontalStart, verticalStart, false);
-                    // }
+                    }
                 }
 
                 horizontalStart = Math.ceil(tableBounds.x - canvasCoordinates.x - MARGIN);
@@ -180,9 +183,9 @@ export async function _setNonWalkableAreas(matrix, tables, relationships) {
 
                 // setting lower limit of the table
                 for (horizontalStart; horizontalStart <= horizontalEnd; horizontalStart++) {
-                    // if(matrix.node && matrix.node[verticalStart] && matrix.node[verticalStart][horizontalStart]) {
+                    if ((verticalEnd <= maxY && verticalEnd >= 0) && (horizontalStart <= maxX && horizontalStart >= 0)) {
                         matrix.setWalkableAt(horizontalStart, verticalEnd, false);
-                    // }
+                    }
                 }
 
 
@@ -191,15 +194,17 @@ export async function _setNonWalkableAreas(matrix, tables, relationships) {
 
                 // setting left margin of the table
                 for (verticalStart; verticalStart <= verticalEnd; verticalStart++) {
-                    // if(matrix.node && matrix.node[verticalStart] && matrix.node[verticalStart][horizontalStart]) {
+                    if ((verticalStart <= maxY && verticalStart >= 0) && (horizontalStart <= maxX && horizontalStart >= 0)) {
                         matrix.setWalkableAt(horizontalStart, verticalStart, false)
-                    // }
+                    }
                 }
 
                 verticalStart = Math.ceil(tableBounds.y - canvasCoordinates.y - MARGIN);
                 // setting right margin of the table
                 for (verticalStart; verticalStart <= verticalEnd; verticalStart++) {
-                    matrix.setWalkableAt(horizontalEnd - MARGIN, verticalStart, false)
+                    if ((verticalStart <= maxY && verticalStart >= 0) && ((horizontalEnd) <= maxX && horizontalEnd >= 0)) {
+                        matrix.setWalkableAt(horizontalEnd - MARGIN, verticalStart, false)
+                    }
                 }
             }
 

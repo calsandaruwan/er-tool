@@ -58,7 +58,7 @@ class Relationships extends Component {
                                                   x2={nextCoordinate[0]}
                                                   y2={nextCoordinate[1]}
                                                   style={{stroke: 'rgb(0,255,0)', strokeWidth: '1'}}
-                                                  marker-end={"url(#triangle" + index + ")"}/>
+                                                  markerEnd={"url(#triangle" + index + ")"}/>
                                         </g>
                                     )
                                 }

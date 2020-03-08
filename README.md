@@ -27,7 +27,7 @@ build can be accessed through [localhost:300](http://localhost:3000/)
 * No validations are used (validations should be added to ignore unwanted path creation eg- Drawing the same path twice, drawing paths between mismatchind data types etc)
 
 ### `Bugs`
-* Tables should be dropped in side the canvas, which is marked with the border. If not it will throw an error
+* There can be error while calculating path, if tables are overlapped while having relationships
 
 ### `Tech`
 * This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
