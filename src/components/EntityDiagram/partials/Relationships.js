@@ -34,12 +34,33 @@ class Relationships extends Component {
                             return relationship.map((coordinates, index) => {
                                 const nextCoordinate = relationship[index + 1];
                                 if (nextCoordinate) {
-                                    return <line key={index}
-                                                 x1={coordinates[0]}
-                                                 y1={coordinates[1]}
-                                                 x2={nextCoordinate[0]}
-                                                 y2={nextCoordinate[1]}
-                                                 style={{stroke: 'rgb(0,255,0)', strokeWidth: '1'}}/>
+                                    return (
+                                        <g key={index}>
+                                            {
+                                                relationship.length - 2 === index
+                                                    ?
+                                                    <defs>
+                                                        <marker id={"triangle" + index}
+                                                                viewBox="0 0 10 10"
+                                                                refX="1"
+                                                                refY="5"
+                                                                markerUnits="strokeWidth"
+                                                                markerWidth="10"
+                                                                markerHeight="10"
+                                                                orient="auto">
+                                                            <path d="M 0 0 L 10 5 L 0 10 z" fill='rgb(0,255,0)'/>
+                                                        </marker>
+                                                    </defs>
+                                                    : null
+                                            }
+                                            <line x1={coordinates[0]}
+                                                  y1={coordinates[1]}
+                                                  x2={nextCoordinate[0]}
+                                                  y2={nextCoordinate[1]}
+                                                  style={{stroke: 'rgb(0,255,0)', strokeWidth: '1'}}
+                                                  marker-end={"url(#triangle" + index + ")"}/>
+                                        </g>
+                                    )
                                 }
                                 return null;
                             })

@@ -17,14 +17,14 @@ build can be accessed through [localhost:300](http://localhost:3000/)
 * React-related packages and support
 * Community support is greater than most of the other FE libraries
 
-### `Areas to be improved`
-* Need to show the path direction arrow (this direction is calculated and can be seen in the right panel relation list) 
+### `Areas to be improved` 
 * Path calculation must be improved (Adding horizontal or vertical lines instead of diagonal lines)
 * Drag actual element when moving tables (currently the element position is changed after dropping it)
 * UI (tables notations are bigger, should have more area for er diagram)
 * Overall performance should be improved while reducing unwanted rendering and loops
 * Relationship cardinality should be updated according to the user input
 * Better if it's possible to alter properties through side panel by selection elements (paths or tables).
+* No validations are used (validations should be added to ignore unwanted path creation eg- Drawing the same path twice, drawing paths between mismatchind data types etc)
 
 ### `Bugs`
 * Tables should be dropped in side the canvas, which is marked with the border. If not it will throw an error
